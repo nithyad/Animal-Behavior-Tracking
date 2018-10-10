@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'sandiegozoo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/admin_deepak/Documents/sandiegozoo/sandiegozoo/database',
+        'NAME': '../Animal-Behavior-Tracking/sandiegozoo/database',
     }
 }
 
