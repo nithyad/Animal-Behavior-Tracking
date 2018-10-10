@@ -55,7 +55,7 @@ ROOT_URLCONF = 'sandiegozoo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'sandiegozoo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '../Animal-Behavior-Tracking/sandiegozoo/database',
+        'NAME': os.path.join(BASE_DIR, 'sandiegozoo/database'),
     }
 }
 
