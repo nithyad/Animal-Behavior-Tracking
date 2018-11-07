@@ -1,1 +1,18 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Load static content and custom CSS #}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+
+    {% bootstrap_alert "Something went wrong" alert_type='danger' %}
+
+{% endblock %}
+
 <p>No Data found</p>

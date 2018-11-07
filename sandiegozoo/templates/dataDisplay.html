@@ -1,3 +1,39 @@
-<h1>Chart of Active v. Non Active Activitiy (Zebra)</h1>
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Load static content and custom CSS #}
 {% load static %}
-<img src="{% static 'images/activityPieChart.png' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+
+{% block bootstrap4_content %}
+	<div class="jumbotron">
+        {% block title %}
+		   <h1>Chart of Active v. Non Active Activitiy</h1>
+		{% endblock %}
+		<p>The graph below shows the breakdown between the two behaviors for the current animal</p>
+	</div>
+    
+    <div class="container">
+
+    	<div class="row">
+			<div class="col-8">
+				<img src="{% static 'images/activityPieChart.png' %}">
+			</div>
+			<div class="col-4">
+				<div class="card" style="width: 18rem;">
+					<img class="card-img-top" src="{% static 'images/zebra.png' %}" alt="Card image cap">
+					<div class="card-body">
+				 	<h5 class="card-title">Mark</h5>
+					<p class="card-text">Species: Zebra</p>
+				  </div>
+				</div>
+			</div>
+		</div>
+    </div>
+
+{% endblock %}
