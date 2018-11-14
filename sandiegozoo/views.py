@@ -9,10 +9,20 @@ from django.shortcuts import render
 
 
 def index(request):
+	# Get data from csv file
+	# TODO(amysorto): Clean up reading from csv file and fillin in context
+	output = []
+	with open('sandiegozoo/static/animalActivityData.csv') as csvfile:
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for row in reader:
+			for items in dict(row).values():
+				for item in items.split(","):
+					output.append(item)
+
 	# Fill in context to pass to 
-	context = {'animal': 'Zebra',
-			   'active': 100,
-			   'nonActive': 240}
+	context = {'animal': output[0],
+			   'active': output[1],
+			   'nonActive': output[2]}
 
 	# Render according template
 	if (context == {}): # context is empty, no data
