@@ -6,6 +6,7 @@ import argparse
 import datetime
 import imutils
 import time
+import csv
 import cv2 as cv
 import pandas as pd
 import numpy as np
@@ -17,7 +18,7 @@ ap.add_argument("-v", "--video", help="path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
 args = vars(ap.parse_args())
 
-animal = "Zebra"
+animal = "Zebra" # TODO(amysorto): take animal as input instead of hard coding
 frameCount = 0 # variable used to refresh the reference frame
 REFENCE_FRAME_THRESHOLD = 60 # number represents how many frames to wait before setting a nre reference frame
  
@@ -111,9 +112,6 @@ vs.stop() if args.get("video", None) is None else vs.release()
 cv.destroyAllWindows()
 
 # plot active v. non active data on a pie chart
-# df = pd.DataFrame(3 * np.random.rand(2), index=[activeTime.microseconds, notActiveTime.microseconds])
-# df.plot.pie(subplots=True)
-
 labels = ['Active', 'Non Active']
 data = [activeTime.microseconds, notActiveTime.microseconds]
 colors = ['#CC9F9B', '#DEDCEA']
@@ -122,7 +120,14 @@ fig1, ax1 = plt.subplots()
 ax1.pie(data, labels=labels, colors=colors, autopct='%1.1f%%')
 ax1.axis('equal')
 
-# plt.show()
-# TODO: allow custom naming for the pie charts to allow for multiple video data
+# TODO(amysorto): allow custom naming for the pie charts to allow for multiple video data
 plt.savefig('sandiegozoo/static/images/activityPieChart.png')
+
+# create csv to write data
+with open('sandiegozoo/static/animalActivityData.csv', mode='w') as data_file:
+    data_writer = csv.writer(data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+    data_writer.writerow(['Animal', 'Active Time (microseconds)', 'Non Active Time (microseconds)'])
+    # TODO(amysorto): have animal type come from 
+    data_writer.writerow([animal, activeTime.microseconds, notActiveTime.microseconds])
 
