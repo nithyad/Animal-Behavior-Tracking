@@ -1,2 +1,2 @@
-Animal,Active Time (microseconds),Non Active Time (microseconds)
-Zebra,561427,327815
+Animal,Active Time,Non Active Time
+Zebra,507.863,156.566

@@ -1,0 +1,44 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Load static content and custom CSS #}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+
+{% block bootstrap4_content %}
+<div class="jumbotron">
+    {% block title %}
+	   <h1>Animals</h1>
+	{% endblock %}
+	<p>Click on an animal to see more details about their behavior</p>
+</div>
+
+<div class="container">
+	<ul class="list-group-flush">
+		<a href="" class="list-group-item list-group-item-action">
+			<div class="row">
+				<div class="col-2"><img src="{% static 'images/zebra.png' %}" alt="zebra" class="rounded-circle" height="42" width="42"></div>
+				<div class="col-10 align-self-center">Zebra</div>
+			</div>
+		</a>
+		<a href="#" class="list-group-item list-group-item-action">
+			<div class="row">
+				<div class="col-2"><img src="{% static 'images/penguin.png' %}" alt="penguin" class="rounded-circle" height="42" width="42"></div>
+				<div class="col-10 align-self-center">Penguin</div>
+			</div>
+		</a>
+		<a href="#" class="list-group-item list-group-item-action">
+			<div class="row">
+				<div class="col-2"><img src="{% static 'images/lion.png' %}" alt="lion" class="rounded-circle" height="42" width="42"></div>
+				<div class="col-10 align-self-center">Lion</div>
+			</div>
+		</a>
+	</ul>
+</div>
+
+{% endblock %}

@@ -111,23 +111,27 @@ while True:
 vs.stop() if args.get("video", None) is None else vs.release()
 cv.destroyAllWindows()
 
-# plot active v. non active data on a pie chart
-labels = ['Active', 'Non Active']
-data = [activeTime.microseconds, notActiveTime.microseconds]
-colors = ['#CC9F9B', '#DEDCEA']
+# Code for plotting, uncomment to use
 
-fig1, ax1 = plt.subplots()
-ax1.pie(data, labels=labels, colors=colors, autopct='%1.1f%%')
-ax1.axis('equal')
+# # plot active v. non active data on a pie chart
+# labels = ['Active', 'Non Active']
+# # Divide by 1000 to store the milliseconds instead of the microseconds (helpful for plotting)
+# data = [(activeTime.microseconds / 1000), (notActiveTime.microseconds / 1000)]
+# colors = ['#CC9F9B', '#DEDCEA']
 
-# TODO(amysorto): allow custom naming for the pie charts to allow for multiple video data
-plt.savefig('sandiegozoo/static/images/activityPieChart.png')
+# fig1, ax1 = plt.subplots()
+# ax1.pie(data, labels=labels, colors=colors, autopct='%1.1f%%')
+# ax1.axis('equal')
+
+# # TODO(amysorto): allow custom naming for the pie charts to allow for multiple video data
+# plt.savefig('sandiegozoo/static/images/activityPieChart.png')
+
 
 # create csv to write data
 with open('sandiegozoo/static/animalActivityData.csv', mode='w') as data_file:
     data_writer = csv.writer(data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    data_writer.writerow(['Animal', 'Active Time (microseconds)', 'Non Active Time (microseconds)'])
+    data_writer.writerow(['Animal', 'Active Time', 'Non Active Time'])
     # TODO(amysorto): have animal type come from 
-    data_writer.writerow([animal, activeTime.microseconds, notActiveTime.microseconds])
+    data_writer.writerow([animal, (activeTime.microseconds / 1000), (notActiveTime.microseconds / 1000)])
 
