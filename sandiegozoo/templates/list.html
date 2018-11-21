@@ -20,19 +20,19 @@
 
 <div class="container">
 	<ul class="list-group-flush">
-		<a href="" class="list-group-item list-group-item-action">
+		<a href ="{% url 'zebra' %}" class="list-group-item list-group-item-action">
 			<div class="row">
 				<div class="col-2"><img src="{% static 'images/zebra.png' %}" alt="zebra" class="rounded-circle" height="42" width="42"></div>
 				<div class="col-10 align-self-center">Zebra</div>
 			</div>
 		</a>
-		<a href="#" class="list-group-item list-group-item-action">
+		<a href="{% url 'penguin' %}" class="list-group-item list-group-item-action">
 			<div class="row">
 				<div class="col-2"><img src="{% static 'images/penguin.png' %}" alt="penguin" class="rounded-circle" height="42" width="42"></div>
 				<div class="col-10 align-self-center">Penguin</div>
 			</div>
 		</a>
-		<a href="#" class="list-group-item list-group-item-action">
+		<a href="{% url 'lion' %}" class="list-group-item list-group-item-action">
 			<div class="row">
 				<div class="col-2"><img src="{% static 'images/lion.png' %}" alt="lion" class="rounded-circle" height="42" width="42"></div>
 				<div class="col-10 align-self-center">Lion</div>

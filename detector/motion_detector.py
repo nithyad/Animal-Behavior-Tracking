@@ -128,7 +128,7 @@ cv.destroyAllWindows()
 
 
 # create csv to write data
-with open('sandiegozoo/static/animalActivityData.csv', mode='w') as data_file:
+with open('sandiegozoo/static/animal_activity_data.csv', mode='w') as data_file:
     data_writer = csv.writer(data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     data_writer.writerow(['Animal', 'Active Time', 'Non Active Time'])

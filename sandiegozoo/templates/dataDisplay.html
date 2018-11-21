@@ -7,6 +7,8 @@
 
 {# Load static content and custom CSS #}
 {% load static %}
+{% static "" as baseUrl %}
+
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -56,6 +58,7 @@
 
 {% block bootstrap4_content %}
 	<div class="jumbotron">
+        <a href="{% url 'index' %}"><button type="button" class="btn" style="margin-bottom: 10px; font-family: 'Playfair Display', serif;">Back to List</button></a>
         {% block title %}
 		   <h1>Chart of Active v. Non Active Activitiy</h1>
 		{% endblock %}
@@ -70,11 +73,13 @@
 			</div>
 			<div class="col-4">
 				<div class="card" style="width: 18rem;">
-					<!-- TODO(amysorto): import picture by according animal -->
-					<img class="card-img-top" src="{% static 'images/zebra.png' %}" alt="Card image cap">
+          {% load static %}
+					<img class="card-img-top" src="{{ baseUrl }}/images/{{ imageURL }}" alt="Card image cap">
 					<div class="card-body">
-				 	<h5 class="card-title"> {{ animal }}</h5>
-					<p class="card-text">Fill in w/ Fun Facts</p>
+				 	<h5 class="card-title">{{ animal }}</h5>
+					<p class="card-text">{{ fun_fact_1 }}</p>
+          <p class="card-text">{{ fun_fact_2 }}</p>
+          <p class="card-text">{{ fun_fact_3 }}</p>
 				  </div>
 				</div>
 			</div>
