@@ -3,14 +3,13 @@
 # import the necessary packages
 from imutils.video import VideoStream
 import argparse
-import datetime
-import imutils
-import time
 import csv
 import cv2 as cv
-import pandas as pd
+import datetime
+import imutils
 import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
+import time
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -21,6 +20,17 @@ args = vars(ap.parse_args())
 animal = "Zebra" # TODO(amysorto): take animal as input instead of hard coding
 frameCount = 0 # variable used to refresh the reference frame
 REFENCE_FRAME_THRESHOLD = 60 # number represents how many frames to wait before setting a nre reference frame
+# vars for deep learning object detection
+prototxt = "detector/MobileNetSSD_deploy.prototxt.txt"
+model = "detector/MobileNetSSD_deploy.caffemodel"
+confidenceDefault = 0.2
+CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
+	"bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
+	"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
+	"sofa", "train", "tvmonitor"]
+COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
+net = cv.dnn.readNetFromCaffe(prototxt, model)
+
  
 # TODO: will not need since we will not read from webcam, maybe security cams in future
 # if the video argument is None, then we are reading from webcam
@@ -89,6 +99,39 @@ while True:
 		lastUpdate = datetime.datetime.now()
 		status = "Not Active"
 
+	# draw deep learning object detection boxes on the frame
+	(h, w) = frame.shape[:2]
+	blob = cv.dnn.blobFromImage(cv.resize(frame, (300, 300)), 0.007843, (300, 300), 127.5)
+	net.setInput(blob)
+	detections = net.forward()
+	# loop over the detections
+	for i in np.arange(0, detections.shape[2]):
+		# extract the confidence (i.e., probability) associated with the
+		# prediction
+		confidence = detections[0, 0, i, 2]
+
+		# filter out weak detections by ensuring the `confidence` is
+		# greater than the minimum confidence
+		if confidence > confidenceDefault:
+			# extract the index of the class label from the `detections`,
+			# then compute the (x, y)-coordinates of the bounding box for
+			# the object
+			idx = int(detections[0, 0, i, 1])
+			if CLASSES[idx] != "chair":
+				box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+				(startX, startY, endX, endY) = box.astype("int")
+				# print(startX, endX, startY, endY)
+
+				# display the prediction
+				label = "{}: {:.2f}%".format(CLASSES[idx], confidence * 100)
+				print("[INFO] {}".format(label))
+				cv.rectangle(frame, (startX, startY), (endX, endY),
+					COLORS[idx], 2)
+
+				y = startY - 15 if startY - 15 > 15 else startY + 15
+				cv.putText(frame, label, (startX, y),
+					cv.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+
 	# draw the text and timestamp on the frame
 	cv.putText(frame, "Behavior Status: {}".format(status), (10, 20),
 		cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
@@ -110,22 +153,6 @@ while True:
 # cleanup the camera and close any open windows
 vs.stop() if args.get("video", None) is None else vs.release()
 cv.destroyAllWindows()
-
-# Code for plotting, uncomment to use
-
-# # plot active v. non active data on a pie chart
-# labels = ['Active', 'Non Active']
-# # Divide by 1000 to store the milliseconds instead of the microseconds (helpful for plotting)
-# data = [(activeTime.microseconds / 1000), (notActiveTime.microseconds / 1000)]
-# colors = ['#CC9F9B', '#DEDCEA']
-
-# fig1, ax1 = plt.subplots()
-# ax1.pie(data, labels=labels, colors=colors, autopct='%1.1f%%')
-# ax1.axis('equal')
-
-# # TODO(amysorto): allow custom naming for the pie charts to allow for multiple video data
-# plt.savefig('sandiegozoo/static/images/activityPieChart.png')
-
 
 # create csv to write data
 with open('sandiegozoo/static/animal_activity_data.csv', mode='w') as data_file:
