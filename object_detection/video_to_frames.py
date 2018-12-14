@@ -31,7 +31,9 @@ else:
 # initaliaze the current status of the animal
 status = "Not active"
 
-with open('../sandiegozoo/static/animal_activity_data.csv', mode='w') as data_file:
+csv_filename = str(args["video"].split('/')[-1].split('.')[0]) + "_" + "animal_activity_data.csv"
+
+with open(csv_filename, mode='w') as data_file:
 	data_writer = csv.writer(data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	data_writer.writerow(['file_name', 'millis'])
 
@@ -53,6 +55,7 @@ with open('../sandiegozoo/static/animal_activity_data.csv', mode='w') as data_fi
 
 		# save frame in frames folder and write info to csv file
 		filename = FRAMES_DIR + str(frameCount) + ".png"
+		
 		# print(filename)
 		cv.imwrite(filename, frame) # save frame to 
 		data_writer.writerow([filename, millisNum])
