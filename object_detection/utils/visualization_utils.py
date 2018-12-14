@@ -33,6 +33,7 @@ import PIL.ImageDraw as ImageDraw
 import PIL.ImageFont as ImageFont
 import six
 import tensorflow as tf
+import csv
 
 from object_detection.core import standard_fields as fields
 
@@ -455,6 +456,7 @@ def draw_side_by_side_evaluation_image(eval_dict,
       max_boxes_to_draw=None,
       min_score_thresh=0.0,
       use_normalized_coordinates=use_normalized_coordinates)
+  print(images_with_groundtruth)
   return tf.concat([images_with_detections, images_with_groundtruth], axis=2)
 
 
@@ -545,6 +547,7 @@ def get_box_dimensions_and_text(
     boxes,
     classes,
     scores,
+    new_file_name,
     category_index,
     instance_masks=None,
     instance_boundaries=None,
@@ -624,6 +627,8 @@ def get_box_dimensions_and_text(
     current_object = [(left, right, top, bottom), box_to_display_str_map[box][0]]
     objects_dimensions_and_info.append(current_object)
 
+    print(objects_dimensions_and_info)
+
     print("Box information")
 
     # remove after I get the dimensions
@@ -645,8 +650,39 @@ def get_box_dimensions_and_text(
           radius=line_thickness / 2,
           use_normalized_coordinates=use_normalized_coordinates)
 
-  print(objects_dimensions_and_info)
-  return image
+  while objects_dimensions_and_info != []:
+    detection_percentage = objects_dimensions_and_info[0][1]
+    detected_animal = ""
+
+    for i in detection_percentage:
+      if i != ":":
+        detected_animal += i
+      else:
+        break
+
+    add_to_csv((left, right, top, bottom), new_file_name)
+    return image
+
+def add_to_csv(information, image_name):
+    """ readcsv takes as
+         + input: a list of the dimensions
+         + output: adds the input to a csv
+    """
+    fileout = image_name + "_" + "boxinformation.csv"
+    #open csv file
+    csvfile = open( fileout, "a", newline='' )
+    filewriter = csv.writer( csvfile, delimiter=",")
+    data_writer.writerow(['x-coords', 'y-coords'])
+    
+    left = information[0]
+    right = information[1]
+    bottom = information[3]
+    top = information[2]
+
+    distance = (right-left, bottom-top)
+
+    filewriter.writerow(distance)
+    csvfile.close()
 
 
 def visualize_boxes_and_labels_on_image_array(
@@ -705,8 +741,8 @@ def visualize_boxes_and_labels_on_image_array(
 
   Returns:
     uint8 numpy array with shape (img_height, img_width, 3) with overlaid boxes.
-  """
   # Create a display string (and color) for every box location, group any boxes
+  """
   # that correspond to the same location.
   box_to_display_str_map = collections.defaultdict(list)
   box_to_color_map = collections.defaultdict(str)
