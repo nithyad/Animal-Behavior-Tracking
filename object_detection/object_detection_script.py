@@ -33,6 +33,8 @@ from utils import label_map_util
 
 from utils import visualization_utils as vis_util
 
+import graph_creator as graph
+
 # What model to download.
 MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
 MODEL_FILE = MODEL_NAME + '.tar.gz'
@@ -81,19 +83,34 @@ def get_image_detected_object_dimensions_and_info(image_path, new_file_name):
   # Actual detection.
   output_dict = run_inference_for_single_image(image_np, detection_graph)
 
+  # image_name = image_path[::-1]
+  # image_animal = ""
+  # for i in str(image_name):
+  #   if i != "/":
+  #     image_animal += i
+  #   else:
+  #     break
+  # image_animal = image_animal[::-1]
+  # image_animal = image_animal + "_" + 
+  image_animal = PATH_TO_TEST_IMAGES_DIR[7:]
+
   vis_util.get_box_dimensions_and_text(
       image_np,
       output_dict['detection_boxes'],
       output_dict['detection_classes'],
       output_dict['detection_scores'],
+      image_animal,
       category_index,
       instance_masks=output_dict.get('detection_masks'),
       use_normalized_coordinates=True,
       line_thickness=8)
-  plt.figure(figsize=IMAGE_SIZE)
-  plt.imshow(image_np)
-  img_name = str(new_file_name) + '.png'
-  plt.savefig(img_name, bbox_inches='tight')
+  print("-----")
+  print(output_dict['detection_scores'])
+  
+  # plt.figure(figsize=IMAGE_SIZE)
+  # plt.imshow(image_np)
+  # img_name = str(new_file_name) + '.png'
+  # plt.savefig(img_name, bbox_inches='tight')
 
 
 # Detection
@@ -102,11 +119,14 @@ def get_image_detected_object_dimensions_and_info(image_path, new_file_name):
 # image1.jpg
 # image2.jpg
 # If you want to test the code with your images, just add path to the images to the TEST_IMAGE_PATHS.
-PATH_TO_TEST_IMAGES_DIR = 'test_images'
-TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 4) ]
+PATH_TO_TEST_IMAGES_DIR = 'frames/walking'
+TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, i) for i in os.listdir(PATH_TO_TEST_IMAGES_DIR)]
 
 # Size, in inches, of the output images.
-IMAGE_SIZE = (12, 8)
+IMAGE_SIZE = Image.open(TEST_IMAGE_PATHS[0])
+width, height = IMAGE_SIZE.size
+IMAGE_SIZE = (width, height)
+print(IMAGE_SIZE)
 
 def run_inference_for_single_image(image, graph):
   with graph.as_default():
@@ -157,6 +177,10 @@ def run_inference_for_single_image(image, graph):
 i = 1
 
 for image_path in TEST_IMAGE_PATHS:
-  get_image_detected_object_dimensions_and_info(image_path, i)
-  i = i + 1
+  if ".DS_Store" not in image_path:
+    get_image_detected_object_dimensions_and_info(image_path, i)
+    i = i + 1
+csv2 = PATH_TO_TEST_IMAGES_DIR[7:] + "_animal_activity_data.csv"
+csv1 = PATH_TO_TEST_IMAGES_DIR[7:] + "_boxinformation.csv"
+graph.creategraphs(csv1, csv2)
 
